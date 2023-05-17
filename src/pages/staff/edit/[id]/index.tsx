@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react';
 import * as yup from 'yup';
 import DatePicker from 'react-datepicker';
-import { useFormik } from 'formik';
+import { useFormik, FormikBag } from 'formik';
 import { getStaffById, updateStaffById } from 'apiSdk/staff';
 import { Error } from 'components/error';
 import { StaffInterface } from 'interfaces/staff';
@@ -36,7 +36,7 @@ function StaffEditPage() {
   const { data, error, isLoading, mutate } = useSWR<StaffInterface>(id, getStaffById);
   const [formError, setFormError] = useState(null);
 
-  const handleSubmit = async (values: StaffInterface, { resetForm }) => {
+  const handleSubmit = async (values: StaffInterface, { resetForm }: FormikBag<any, any>) => {
     setFormError(null);
     try {
       const updated = await updateStaffById(id, values);

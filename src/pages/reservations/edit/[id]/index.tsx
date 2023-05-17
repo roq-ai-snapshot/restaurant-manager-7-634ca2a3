@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react';
 import * as yup from 'yup';
 import DatePicker from 'react-datepicker';
-import { useFormik } from 'formik';
+import { useFormik, FormikBag } from 'formik';
 import { getReservationsById, updateReservationsById } from 'apiSdk/reservations';
 import { Error } from 'components/error';
 import { ReservationsInterface } from 'interfaces/reservations';
@@ -36,7 +36,7 @@ function ReservationsEditPage() {
   const { data, error, isLoading, mutate } = useSWR<ReservationsInterface>(id, getReservationsById);
   const [formError, setFormError] = useState(null);
 
-  const handleSubmit = async (values: ReservationsInterface, { resetForm }) => {
+  const handleSubmit = async (values: ReservationsInterface, { resetForm }: FormikBag<any, any>) => {
     setFormError(null);
     try {
       const updated = await updateReservationsById(id, values);

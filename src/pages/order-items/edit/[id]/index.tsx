@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react';
 import * as yup from 'yup';
 import DatePicker from 'react-datepicker';
-import { useFormik } from 'formik';
+import { useFormik, FormikBag } from 'formik';
 import { getOrder_itemsById, updateOrder_itemsById } from 'apiSdk/order_items';
 import { Error } from 'components/error';
 import { Order_itemsInterface } from 'interfaces/order_items';
@@ -36,7 +36,7 @@ function Order_itemsEditPage() {
   const { data, error, isLoading, mutate } = useSWR<Order_itemsInterface>(id, getOrder_itemsById);
   const [formError, setFormError] = useState(null);
 
-  const handleSubmit = async (values: Order_itemsInterface, { resetForm }) => {
+  const handleSubmit = async (values: Order_itemsInterface, { resetForm }: FormikBag<any, any>) => {
     setFormError(null);
     try {
       const updated = await updateOrder_itemsById(id, values);

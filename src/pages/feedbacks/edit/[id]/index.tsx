@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react';
 import * as yup from 'yup';
 import DatePicker from 'react-datepicker';
-import { useFormik } from 'formik';
+import { useFormik, FormikBag } from 'formik';
 import { getFeedbackById, updateFeedbackById } from 'apiSdk/feedbacks';
 import { Error } from 'components/error';
 import { FeedbackInterface } from 'interfaces/feedbacks';
@@ -36,7 +36,7 @@ function FeedbackEditPage() {
   const { data, error, isLoading, mutate } = useSWR<FeedbackInterface>(id, getFeedbackById);
   const [formError, setFormError] = useState(null);
 
-  const handleSubmit = async (values: FeedbackInterface, { resetForm }) => {
+  const handleSubmit = async (values: FeedbackInterface, { resetForm }: FormikBag<any, any>) => {
     setFormError(null);
     try {
       const updated = await updateFeedbackById(id, values);

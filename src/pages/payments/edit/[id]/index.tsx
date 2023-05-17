@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react';
 import * as yup from 'yup';
 import DatePicker from 'react-datepicker';
-import { useFormik } from 'formik';
+import { useFormik, FormikBag } from 'formik';
 import { getPaymentsById, updatePaymentsById } from 'apiSdk/payments';
 import { Error } from 'components/error';
 import { PaymentsInterface } from 'interfaces/payments';
@@ -34,7 +34,7 @@ function PaymentsEditPage() {
   const { data, error, isLoading, mutate } = useSWR<PaymentsInterface>(id, getPaymentsById);
   const [formError, setFormError] = useState(null);
 
-  const handleSubmit = async (values: PaymentsInterface, { resetForm }) => {
+  const handleSubmit = async (values: PaymentsInterface, { resetForm }: FormikBag<any, any>) => {
     setFormError(null);
     try {
       const updated = await updatePaymentsById(id, values);

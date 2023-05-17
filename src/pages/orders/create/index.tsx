@@ -16,7 +16,7 @@ import {
   NumberIncrementStepper,
   NumberInput,
 } from '@chakra-ui/react';
-import { useFormik } from 'formik';
+import { useFormik, FormikBag } from 'formik';
 import * as yup from 'yup';
 import DatePicker from 'react-datepicker';
 import { useRouter } from 'next/router';
@@ -33,7 +33,7 @@ function OrdersCreatePage() {
   const router = useRouter();
   const [error, setError] = useState(null);
 
-  const handleSubmit = async (values: OrdersInterface, { resetForm }) => {
+  const handleSubmit = async (values: OrdersInterface, { resetForm }: FormikBag<any, any>) => {
     setError(null);
     try {
       await createOrders(values);

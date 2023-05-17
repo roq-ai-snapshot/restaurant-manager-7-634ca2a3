@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react';
 import * as yup from 'yup';
 import DatePicker from 'react-datepicker';
-import { useFormik } from 'formik';
+import { useFormik, FormikBag } from 'formik';
 import { getMenusById, updateMenusById } from 'apiSdk/menus';
 import { Error } from 'components/error';
 import { MenusInterface } from 'interfaces/menus';
@@ -34,7 +34,7 @@ function MenusEditPage() {
   const { data, error, isLoading, mutate } = useSWR<MenusInterface>(id, getMenusById);
   const [formError, setFormError] = useState(null);
 
-  const handleSubmit = async (values: MenusInterface, { resetForm }) => {
+  const handleSubmit = async (values: MenusInterface, { resetForm }: FormikBag<any, any>) => {
     setFormError(null);
     try {
       const updated = await updateMenusById(id, values);
