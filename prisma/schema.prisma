@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model feedback {
+  id            String       @id @db.Uuid
+  customer_id   String?      @db.Uuid
+  restaurant_id String?      @db.Uuid
+  rating        Int
+  comment       String?
+  users         users?       @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  restaurants   restaurants? @relation(fields: [restaurant_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model menu_items {
+  id          String        @id @db.Uuid
+  menu_id     String?       @db.Uuid
+  name        String        @db.VarChar(255)
+  description String?
+  price       Int
+  menus       menus?        @relation(fields: [menu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  order_items order_items[]
+}
+
+model menus {
+  id            String       @id @db.Uuid
+  restaurant_id String?      @db.Uuid
+  name          String       @db.VarChar(255)
+  description   String?
+  menu_items    menu_items[]
+  restaurants   restaurants? @relation(fields: [restaurant_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model order_items {
+  id           String      @id @db.Uuid
+  order_id     String?     @db.Uuid
+  menu_item_id String?     @db.Uuid
+  quantity     Int
+  menu_items   menu_items? @relation(fields: [menu_item_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  orders       orders?     @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model orders {
+  id            String        @id @db.Uuid
+  customer_id   String?       @db.Uuid
+  restaurant_id String?       @db.Uuid
+  status        String        @db.VarChar(255)
+  total_price   Int
+  order_items   order_items[]
+  users         users?        @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  restaurants   restaurants?  @relation(fields: [restaurant_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  payments      payments[]
+}
+
+model payments {
+  id       String  @id @db.Uuid
+  order_id String? @db.Uuid
+  amount   Int
+  status   String  @db.VarChar(255)
+  orders   orders? @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model reservations {
+  id               String       @id @db.Uuid
+  customer_id      String?      @db.Uuid
+  restaurant_id    String?      @db.Uuid
+  date             DateTime     @db.Timestamp(6)
+  number_of_guests Int
+  users            users?       @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  restaurants      restaurants? @relation(fields: [restaurant_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model restaurants {
+  id           String         @id @db.Uuid
+  owner_id     String?        @db.Uuid
+  name         String         @db.VarChar(255)
+  description  String?
+  feedback     feedback[]
+  menus        menus[]
+  orders       orders[]
+  reservations reservations[]
+  users        users?         @relation(fields: [owner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  staff        staff[]
+}
+
+model staff {
+  id            String       @id @db.Uuid
+  user_id       String?      @db.Uuid
+  restaurant_id String?      @db.Uuid
+  role          String       @db.VarChar(255)
+  restaurants   restaurants? @relation(fields: [restaurant_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users         users?       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  id           String         @id @db.Uuid
+  role         String         @db.VarChar(255)
+  feedback     feedback[]
+  orders       orders[]
+  reservations reservations[]
+  restaurants  restaurants[]
+  staff        staff[]
+}
